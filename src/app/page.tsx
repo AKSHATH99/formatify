@@ -44,7 +44,7 @@ import { useRef, useState } from "react";
 import html2canvas from "html2canvas";
 
 interface input {
-  code: any;
+  code: string;
   language: string;
   selectedTheme: { [key: string]: React.CSSProperties };
 }
@@ -175,7 +175,7 @@ const themeMap = {
   zTouch,
 };
 
-const downloadAsImage = async (codeRef: any) => {
+const downloadAsImage = async (codeRef: React.RefObject<HTMLDivElement>) => {
   if (!codeRef.current) return;
 
   try {
@@ -212,12 +212,12 @@ const downloadAsImage = async (codeRef: any) => {
 };
 
 export default function Home() {
-  const codeRef = useRef(null);
+  const codeRef = useRef<HTMLDivElement>(null);
   const [code, setCode] = useState("");
   const [language, setLanguage] = useState("javascript");
   const [selectedTheme, setSelectedTheme] = useState("vscDarkPlus");
 
-  const handleInput = (e: any) => {
+  const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCode(e.target.value);
   };
 
