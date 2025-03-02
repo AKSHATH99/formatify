@@ -42,11 +42,15 @@ import {
 } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { useRef, useState } from "react";
 import html2canvas from "html2canvas";
+import React, { CSSProperties } from "react";
+
+// Define a union type for theme keys
+type ThemeKey = keyof typeof themeMap;
 
 interface input {
   code: string;
   language: string;
-  selectedTheme: { [key: string]: React.CSSProperties };
+  selectedTheme: ThemeKey;
 }
 
 const languages = [
@@ -175,7 +179,7 @@ const themeMap = {
   zTouch,
 };
 
-const downloadAsImage = async (codeRef: React.RefObject<HTMLDivElement>) => {
+const downloadAsImage = async (codeRef: React.RefObject<HTMLDivElement | null>) => {
   if (!codeRef.current) return;
 
   try {
@@ -188,8 +192,11 @@ const downloadAsImage = async (codeRef: React.RefObject<HTMLDivElement>) => {
 
     const styleElements = tempDiv.querySelectorAll("style");
     styleElements.forEach((styleEl) => {
-      const newCSS = styleEl?.textContent.replace(/oklch\([^)]+\)/g, "#cccccc");
-      styleEl.textContent = newCSS;
+      const textContent = styleEl?.textContent;
+      if (textContent) {
+        const newCSS = textContent.replace(/oklch\([^)]+\)/g, "#cccccc");
+        styleEl.textContent = newCSS;
+      }
     });
 
     const canvas = await html2canvas(tempDiv, {
@@ -215,9 +222,9 @@ export default function Home() {
   const codeRef = useRef<HTMLDivElement>(null);
   const [code, setCode] = useState("");
   const [language, setLanguage] = useState("javascript");
-  const [selectedTheme, setSelectedTheme] = useState("vscDarkPlus");
+  const [selectedTheme, setSelectedTheme] = useState<ThemeKey>("vscDarkPlus");
 
-  const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setCode(e.target.value);
   };
 
@@ -226,10 +233,10 @@ export default function Home() {
   };
 
   const handleThemeSelect = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedTheme(event.target.value);
+    setSelectedTheme(event.target.value as ThemeKey);
   };
 
-  const createFormattedCode = ({ code, language }: input) => {
+  const createFormattedCode = ({ code, language, selectedTheme }: input) => {
     const themeObject = themeMap[selectedTheme] || vscDarkPlus;
     return (
       <SyntaxHighlighter language={language} style={themeObject} showLineNumbers>
@@ -237,7 +244,6 @@ export default function Home() {
       </SyntaxHighlighter>
     );
   };
-
 
   // --------------------------------------------------------------------
 
