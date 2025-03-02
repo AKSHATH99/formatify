@@ -347,21 +347,21 @@ export default function Home() {
   // --------------------------------------------------------------------
 
   return (
-    <div className="min-h-screen bg-black p-8">
+    <div className="min-h-screen bg-black p-4 sm:p-6 md:p-8">
       <ToastContainer/>
-      <h1 className="text-4xl font-bold text-center text-white mb-8 mt-6">
+      <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center text-white mb-4 sm:mb-6 md:mb-8 mt-4 sm:mt-6">
         Convert Your Code Snippets into Shareable Images
       </h1>
-      <p className="text-white text-center mb-10  ">
+      <p className="text-white text-center mb-6 sm:mb-8 md:mb-10 text-sm sm:text-base">
         Paste in your code and select your favourite theme . Code Snippet
         sharing made easy and minimalistic !{" "}
       </p>
-      <div className="flex flex-col lg:flex-row gap-8">
-        <div className="w-full lg:w-1/2 bg-white p-6 rounded-lg shadow-md">
+      <div className="flex flex-col lg:flex-row gap-4 sm:gap-6 md:gap-8">
+        <div className="w-full lg:w-1/2 bg-white p-4 sm:p-6 rounded-lg shadow-md">
           <div className="flex flex-col space-y-4">
-            <div className="flex gap-2">
+            <div className="flex flex-col sm:flex-row gap-2">
               <select
-                className="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto mb-2 sm:mb-0"
                 value={language}
                 onChange={handleLanguageSelect}
               >
@@ -373,7 +373,7 @@ export default function Home() {
                 ))}
               </select>
               <select
-                className="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
                 value={selectedTheme}
                 onChange={handleThemeSelect}
               >
@@ -385,14 +385,14 @@ export default function Home() {
                 ))}
               </select>
             </div>
-
+  
             <textarea
-              className="w-full h-64 p-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+              className="w-full h-48 sm:h-64 p-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
               onChange={handleInput}
               placeholder="Type your code here..."
               value={code?code:""}
             />
-            <div className=" flex gap-10 ">
+            <div className="flex flex-col sm:flex-row gap-4 sm:gap-10">
               {downloading ? (
                 <div className="px-6 py-3">
                   <LoaderAnimation />
@@ -400,11 +400,11 @@ export default function Home() {
               ) : (
                 <button
                   onClick={() => downloadAsImage(codeRef)}
-                  className="px-6 py-3 bg-[#8a852b] flex gap-3 items justify-center text-white rounded-md hover:cursor-pointer hover:bg-[#63613d] focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="px-4 py-2 sm:px-6 sm:py-3 bg-[#8a852b] flex gap-2 sm:gap-3 items-center justify-center text-white rounded-md hover:cursor-pointer hover:bg-[#63613d] focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto text-sm sm:text-base"
                 >
                   <div className="flex items-center space-x-2">
                     <img
-                      className="h-5 w-5"
+                      className="h-4 w-4 sm:h-5 sm:w-5"
                       src="/image.png"
                       alt="Download Icon"
                     />
@@ -413,16 +413,16 @@ export default function Home() {
                 </button>
               )}
               {CodeCopied ? (
-                <p className="ml-10 mt-5 font-bold text-green-600 flex items-center gap-2 animate-bounce">
+                <p className="text-center sm:ml-10 mt-2 sm:mt-5 font-bold text-green-600 flex items-center justify-center sm:justify-start gap-2 animate-bounce text-sm sm:text-base">
                   Copied!
                 </p>
               ) : (
                 <button
                   onClick={() => copyImageToClipboard(codeRef)}
-                  className="px-6 py-3 bg-[#c1db35] flex gap-3 items-center justify-center text-white rounded-md hover:cursor-pointer hover:bg-[#959e62] focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="px-4 py-2 sm:px-6 sm:py-3 bg-[#c1db35] flex gap-2 sm:gap-3 items-center justify-center text-white rounded-md hover:cursor-pointer hover:bg-[#959e62] focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto text-sm sm:text-base"
                 >
                   <img
-                    className="h-5 w-5"
+                    className="h-4 w-4 sm:h-5 sm:w-5"
                     src="/copy-icon.png"
                     alt="Copy Icon"
                   />
@@ -432,20 +432,20 @@ export default function Home() {
             </div>
           </div>
         </div>
-        <div className="w-full lg:w-1/2 bg-white p-6 rounded-lg shadow-md">
+        <div className="w-full lg:w-1/2 bg-white p-4 sm:p-6 rounded-lg shadow-md mt-4 lg:mt-0">
           <div
-            className="max-h-[400px] overflow-auto p-4 bg-gray-50 rounded-md"
+            className="max-h-[300px] sm:max-h-[400px] overflow-auto p-2 sm:p-4 bg-gray-50 rounded-md"
             ref={codeRef}
           >
             {createFormattedCode({ code, language, selectedTheme })}
           </div>
         </div>
       </div>
-
-      <div className="text-white text-center mb-10 mt-10" >
-        Built and shipped by Akshath P . With love  ☕ . Feel free to checkout my profile : <a target="_blank" href="https://akshathp.xyz/">akshathp.xyz</a> 
+  
+      <div className="text-white text-center mb-6 mt-6 sm:mb-10 sm:mt-10 text-sm sm:text-base">
+        Built and shipped by Akshath P . With love  ☕ . Feel free to checkout my profile : <a target="_blank" href="https://akshathp.xyz/" className="hover:underline">akshathp.xyz</a> 
       </div>
-      <div className="text-white text-center mb-10 mt-10" >
+      <div className="text-white text-center mb-6 sm:mb-10 text-sm sm:text-base">
               
       </div>
     </div>
