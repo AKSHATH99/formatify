@@ -42,7 +42,6 @@ import {
 } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { useRef, useState } from "react";
 import html2canvas from "html2canvas";
-import React, { CSSProperties } from "react";
 
 // Define a union type for theme keys
 type ThemeKey = keyof typeof themeMap;
