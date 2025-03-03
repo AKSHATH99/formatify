@@ -366,6 +366,8 @@ export default function Home() {
   ? 'https://your-production-url.com'
   : 'http://localhost:3000';
     
+  console.log(API_BASE_URL);
+  
     if(code){
     try{
     setgeneratingAIResponse(true)
