@@ -45,8 +45,9 @@ import html2canvas from "html2canvas";
 import LoaderAnimation from "@/components/LoaderAnimation";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import GeminiResponse from "@/components/GeminiResponse";
 
-// Define a union type for theme keys
+
 type ThemeKey = keyof typeof themeMap;
 
 interface input {
@@ -191,126 +192,144 @@ export default function Home() {
   const [selectedTheme, setSelectedTheme] = useState<ThemeKey>("vscDarkPlus");
   const [CodeCopied, setCodeCopied] = useState(false);
   const [downloading, setDownloading] = useState(false);
-
+  const [generated, setGeneratted] = useState(false);
+  const [generatingAIResponse , setgeneratingAIResponse] = useState(false);
+  const [AIResponse , setAIResponse] = useState("")
 
   const notify = () => {
-    toast("Type your code before clicking bro ",{ position: "top-right",
+    toast("Type your code before clicking bro ", {
+      position: "top-right",
       autoClose: 3000,
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,
       draggable: true,
       theme: "dark",
-      progressClassName: "!bg-gradient-to-r !from-orange-400 !to-pink-600"
+      progressClassName: "!bg-gradient-to-r !from-orange-400 !to-pink-600",
     });
-  }
+  };
+  const Errornotify = () => {
+    toast("Oops ! Something went wrong", {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      theme: "dark",
+      progressClassName: "!bg-red-500",
+    });
+  };
 
   const downloadAsImage = async (
     codeRef: React.RefObject<HTMLDivElement | null>
   ) => {
     if (!codeRef.current) return;
-    if(code){
-    try {
-      setDownloading(true);
-      const tempDiv = document.createElement("div");
-      tempDiv.innerHTML = codeRef.current?.innerHTML;
-      tempDiv.style.position = "absolute";
-      tempDiv.style.left = "-9999px";
-      tempDiv.style.backgroundColor = "#3371a6";
-      document.body.appendChild(tempDiv);
+    if (code) {
+      try {
+        setDownloading(true);
+        const tempDiv = document.createElement("div");
+        tempDiv.innerHTML = codeRef.current?.innerHTML;
+        tempDiv.style.position = "absolute";
+        tempDiv.style.left = "-9999px";
+        tempDiv.style.backgroundColor = "#3371a6";
+        document.body.appendChild(tempDiv);
 
-      const styleElements = tempDiv.querySelectorAll("style");
-      styleElements.forEach((styleEl) => {
-        const textContent = styleEl?.textContent;
-        if (textContent) {
-          const newCSS = textContent.replace(/oklch\([^)]+\)/g, "#cccccc");
-          styleEl.textContent = newCSS;
-        }
-      });
+        const styleElements = tempDiv.querySelectorAll("style");
+        styleElements.forEach((styleEl) => {
+          const textContent = styleEl?.textContent;
+          if (textContent) {
+            const newCSS = textContent.replace(/oklch\([^)]+\)/g, "#cccccc");
+            styleEl.textContent = newCSS;
+          }
+        });
 
-      const canvas = await html2canvas(tempDiv, {
-        backgroundColor: "#3371a6",
-        scale: 2,
-      });
+        const canvas = await html2canvas(tempDiv, {
+          backgroundColor: "#3371a6",
+          scale: 2,
+        });
 
-      document.body.removeChild(tempDiv);
+        document.body.removeChild(tempDiv);
 
-      const image = canvas.toDataURL("image/png");
-      const link = document.createElement("a");
-      link.href = image;
-      link.download = "code-snippet.png";
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      setDownloading(false);
-    } catch (error) {
-      console.error("Error generating image:", error);
+        const image = canvas.toDataURL("image/png");
+        const link = document.createElement("a");
+        link.href = image;
+        link.download = "code-snippet.png";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        setDownloading(false);
+      } catch (error) {
+        console.error("Error generating image:", error);
+        Errornotify()
+      }
+    } else {
+      notify();
     }
-  }else{
-    notify();
-    
-  }
   };
   const copyImageToClipboard = async (
     codeRef: React.RefObject<HTMLDivElement | null>
   ) => {
     if (!codeRef.current) return;
 
-    if(code){
-    try {
-      console.log("hey");
+    if (code) {
+      try {
+        console.log("hey");
 
-      const tempDiv = document.createElement("div");
-      tempDiv.innerHTML = codeRef.current?.innerHTML;
-      tempDiv.style.position = "absolute";
-      tempDiv.style.left = "-9999px";
-      tempDiv.style.backgroundColor = "#3371a6";
-      document.body.appendChild(tempDiv);
+        const tempDiv = document.createElement("div");
+        tempDiv.innerHTML = codeRef.current?.innerHTML;
+        tempDiv.style.position = "absolute";
+        tempDiv.style.left = "-9999px";
+        tempDiv.style.backgroundColor = "#3371a6";
+        document.body.appendChild(tempDiv);
 
-      const styleElements = tempDiv.querySelectorAll("style");
-      styleElements.forEach((styleEl) => {
-        const textContent = styleEl?.textContent;
-        if (textContent) {
-          const newCSS = textContent.replace(/oklch\([^)]+\)/g, "#cccccc");
-          styleEl.textContent = newCSS;
-        }
-      });
-
-      const canvas = await html2canvas(tempDiv, {
-        backgroundColor: "#3371a6",
-        scale: 2,
-      });
-
-      document.body.removeChild(tempDiv);
-
-      // Convert canvas to blob
-      canvas.toBlob(async (blob) => {
-        if (blob) {
-          try {
-            // Create ClipboardItem and write to clipboard
-            const item = new ClipboardItem({ "image/png": blob });
-            await navigator.clipboard.write([item]);
-            // You might want to add some user feedback here
-            // alert('Image copied to clipboard!');
-            setCodeCopied(true);
-          } catch (err) {
-            console.error("Failed to copy image: ", err);
-            alert(
-              "Failed to copy image. This feature may not be supported in your browser."
-            );
+        const styleElements = tempDiv.querySelectorAll("style");
+        styleElements.forEach((styleEl) => {
+          const textContent = styleEl?.textContent;
+          if (textContent) {
+            const newCSS = textContent.replace(/oklch\([^)]+\)/g, "#cccccc");
+            styleEl.textContent = newCSS;
           }
-        }
-      }, "image/png");
-    } catch (error) {
-      console.error("Error generating image:", error);
+        });
+
+        const canvas = await html2canvas(tempDiv, {
+          backgroundColor: "#3371a6",
+          scale: 2,
+        });
+
+        document.body.removeChild(tempDiv);
+
+        // Convert canvas to blob
+        canvas.toBlob(async (blob) => {
+          if (blob) {
+            try {
+              // Create ClipboardItem and write to clipboard
+              const item = new ClipboardItem({ "image/png": blob });
+              await navigator.clipboard.write([item]);
+              // You might want to add some user feedback here
+              // alert('Image copied to clipboard!');
+              setCodeCopied(true);
+            } catch (err) {
+              console.error("Failed to copy image: ", err);
+              Errornotify()
+              alert(
+                "Failed to copy image. This feature may not be supported in your browser."
+              );
+            }
+          }
+        }, "image/png");
+      } catch (error) {
+        console.error("Error generating image:", error);
+        Errornotify()
+      }
+    } else {
+      notify();
     }
-  }else{
-    notify();
-  }
   };
 
   const handleInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setCode(e.target.value);
+    setGeneratted(true)
   };
 
   const handleLanguageSelect = (
@@ -336,6 +355,61 @@ export default function Home() {
     );
   };
 
+  const generatePrompt =(code:any)=>{
+    const promptText = `Explain how this code works. Please format your response in Markdown with proper headings, lists, and code blocks: ${code}`;
+    console.log(promptText);
+    return promptText;
+  }
+
+  const AskAI=async(code:any)=>{
+    console.log(code);
+
+    const API_BASE_URL = process.env.NODE_ENV === 'production'
+  ? 'https://your-production-url.com'
+  : 'http://localhost:3000';
+    
+    if(code){
+    try{
+    setgeneratingAIResponse(true)
+    const prompt = generatePrompt(code);
+    const res = await fetch(`${API_BASE_URL}/api/openai`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ prompt }),
+    });
+    
+    if (!res.ok) {
+      throw new Error('Failed to fetch from API');
+      setgeneratingAIResponse(false)
+    }
+    
+    const data = await res.json();
+    setAIResponse(data.response)
+    console.log(data.response);
+    
+    // setResponse(data.response);
+  } catch (error) {
+    console.error('Error:', error);
+    setgeneratingAIResponse(false)
+    Errornotify()
+    // setResponse('Error occurred while fetching response.');
+  } finally {
+    setgeneratingAIResponse(false)
+
+  }
+}else{
+  notify()
+}
+};
+
+
+  useEffect(() => {
+    setGeneratted(!generated);
+    console.log(generated);
+  }, [code]);
+
   useEffect(() => {
     const interval = setInterval(() => {
       setCodeCopied(false);
@@ -348,7 +422,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-black p-4 sm:p-6 md:p-8">
-      <ToastContainer/>
+      <ToastContainer />
       <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center text-white mb-4 sm:mb-6 md:mb-8 mt-4 sm:mt-6">
         Convert Your Code Snippets into Shareable Images
       </h1>
@@ -385,12 +459,12 @@ export default function Home() {
                 ))}
               </select>
             </div>
-  
+
             <textarea
               className="w-full h-48 sm:h-64 p-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
               onChange={handleInput}
               placeholder="Type your code here..."
-              value={code?code:""}
+              value={code ? code : ""}
             />
             <div className="flex flex-col sm:flex-row gap-4 sm:gap-10">
               {downloading ? (
@@ -400,7 +474,7 @@ export default function Home() {
               ) : (
                 <button
                   onClick={() => downloadAsImage(codeRef)}
-                  className="px-4 py-2 sm:px-6 sm:py-3 bg-[#8a852b] flex gap-2 sm:gap-3 items-center justify-center text-white rounded-md hover:cursor-pointer hover:bg-[#63613d] focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto text-sm sm:text-base"
+                  className="px-4 py-2 sm:px-6 sm:py-3 bg-[#515048] flex gap-2 sm:gap-3 items-center justify-center text-white rounded-md hover:cursor-pointer hover:bg-[#63613d] focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto text-sm sm:text-base"
                 >
                   <div className="flex items-center space-x-2">
                     <img
@@ -419,7 +493,7 @@ export default function Home() {
               ) : (
                 <button
                   onClick={() => copyImageToClipboard(codeRef)}
-                  className="px-4 py-2 sm:px-6 sm:py-3 bg-[#c1db35] flex gap-2 sm:gap-3 items-center justify-center text-white rounded-md hover:cursor-pointer hover:bg-[#959e62] focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto text-sm sm:text-base"
+                  className="px-4 py-2 sm:px-6 sm:py-3 bg-[#68703f] flex gap-2 sm:gap-3 items-center justify-center text-white rounded-md hover:cursor-pointer hover:bg-[#959e62] focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto text-sm sm:text-base"
                 >
                   <img
                     className="h-4 w-4 sm:h-5 sm:w-5"
@@ -430,24 +504,57 @@ export default function Home() {
                 </button>
               )}
             </div>
+            
           </div>
         </div>
         <div className="w-full lg:w-1/2 bg-white p-4 sm:p-6 rounded-lg shadow-md mt-4 lg:mt-0">
+          {/* {generated &&   code ?"" :  
+          <button 
+          onClick={()=>{AskAI(code)}}
+          className=" ml-1 border rounded-lg p-1 px-6 justify-center items-center shadow-blue-400 shadow-2xl flex gap-4 bg-black text-white hover:shadow-blue-600 hover:shadow-2xl hover:bg-gray-800 transition-shadow hover:cursor-pointer duration-300"
+        >
+           <img className="h-10" src="gemini.svg"/>  
+           <p className="text-[13px] mt-[6px] "> Ask AI to explain </p>
+          </button>} */}
+            {/* <div className="my-10  ">
+
+                  {AIResponse?<GeminiResponse  responseText={AIResponse} />:""}
+            </div> */}
           <div
             className="max-h-[300px] sm:max-h-[400px] overflow-auto p-2 sm:p-4 bg-gray-50 rounded-md"
             ref={codeRef}
           >
             {createFormattedCode({ code, language, selectedTheme })}
           </div>
+          {generated &&   code ? "" :  
+          
+          <button 
+          onClick={()=>{AskAI(code)}}
+          className=" ml-5 mt-10 border rounded-lg p-1 px-6 justify-center items-center shadow-blue-400 shadow-2xl flex gap-4 bg-black text-white hover:shadow-blue-600 hover:shadow-2xl hover:bg-gray-800 transition-shadow hover:cursor-pointer duration-300"
+        >
+           <img className="h-10" src="gemini.svg"/>  
+           { generatingAIResponse?<LoaderAnimation/> :<p className="text-[13px] mt-[6px] "> Ask AI to explain </p>}
+          </button>}
+          {AIResponse?
+          <div className=" ">
+                <p className="mt-10 mb-4 text-sm text-gray-400">This response is generated by Google's Gemini LLM API </p>
+                <GeminiResponse  responseText={AIResponse} />
+          </div>:""}
         </div>
       </div>
-  
+
       <div className="text-white text-center mb-6 mt-6 sm:mb-10 sm:mt-10 text-sm sm:text-base">
-        Built and shipped by Akshath P . With love  ☕ . Feel free to checkout my profile : <a target="_blank" href="https://akshathp.xyz/" className="hover:underline">akshathp.xyz</a> 
+        Built and shipped by Akshath P . With love ☕ . Feel free to checkout my
+        profile :{" "}
+        <a
+          target="_blank"
+          href="https://akshathp.xyz/"
+          className="hover:underline"
+        >
+          akshathp.xyz
+        </a>
       </div>
-      <div className="text-white text-center mb-6 sm:mb-10 text-sm sm:text-base">
-              
-      </div>
+      <div className="text-white text-center mb-6 sm:mb-10 text-sm sm:text-base"></div>
     </div>
   );
 }
