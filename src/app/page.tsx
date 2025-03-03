@@ -363,7 +363,7 @@ export default function Home() {
     console.log(code);
 
     const API_BASE_URL = process.env.NODE_ENV === 'production'
-  ? 'https://formatify-silk.vercel.app/'
+  ? 'https://formatify-silk.vercel.app'
   : 'http://localhost:3000';
     
   console.log(API_BASE_URL);
