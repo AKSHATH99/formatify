@@ -274,8 +274,6 @@ export default function Home() {
 
     if (code) {
       try {
-        console.log("hey");
-
         const tempDiv = document.createElement("div");
         tempDiv.innerHTML = codeRef.current?.innerHTML;
         tempDiv.style.position = "absolute";
@@ -355,18 +353,14 @@ export default function Home() {
 
   const generatePrompt =(code:string)=>{
     const promptText = `Explain how this code works. Please format your response in Markdown with proper headings, lists, and code blocks: ${code}`;
-    console.log(promptText);
     return promptText;
   }
 
   const AskAI=async(code:string)=>{
-    console.log(code);
-
     const API_BASE_URL = process.env.NODE_ENV === 'production'
   ? 'https://formatify-silk.vercel.app'
   : 'http://localhost:3000';
     
-  console.log(API_BASE_URL);
   
     if(code){
     try{
@@ -379,15 +373,14 @@ export default function Home() {
       },
       body: JSON.stringify({ prompt }),
     });
-    console.log(res)
-    // if (!res.ok) {
-    //   throw new Error('Failed to fetch from API');
-    //   setgeneratingAIResponse(false)
-    // }
+
+    if (!res.ok) {
+      throw new Error('Failed to fetch from API');
+      setgeneratingAIResponse(false)
+    }
     
     const data = await res.json();
     setAIResponse(data.response)
-    console.log(data.response);
 
   } catch (error) {
     console.error('Error:', error);
@@ -408,7 +401,6 @@ const clearInputBox=()=>{
 
   useEffect(() => {
     setGeneratted(!generated);
-    console.log(generated);
   }, [code]);
 
   useEffect(() => {
