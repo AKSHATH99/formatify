@@ -400,6 +400,9 @@ export default function Home() {
 }
 };
 
+const clearInputBox=()=>{
+  setCode("")
+}
 
   useEffect(() => {
     setGeneratted(!generated);
@@ -430,13 +433,13 @@ export default function Home() {
       <div className="flex flex-col lg:flex-row gap-4 sm:gap-6 md:gap-8">
         <div className="w-full lg:w-1/2 bg-white p-4 sm:p-6 rounded-lg shadow-md">
           <div className="flex flex-col space-y-4">
-            <div className="flex flex-col sm:flex-row gap-2">
+            <div className="flex flex-col sm:flex-row gap-10">
               <select
-                className="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto mb-2 sm:mb-0"
+                className="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#538e8e] w-full sm:w-auto mb-2 sm:mb-0"
                 value={language}
                 onChange={handleLanguageSelect}
               >
-                <option value="">Select Language</option>
+              
                 {languages.map((language) => (
                   <option key={language.value} value={language.value}>
                     {language.label}
@@ -444,21 +447,23 @@ export default function Home() {
                 ))}
               </select>
               <select
-                className="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto"
+                className="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#538e8e] w-full sm:w-auto"
                 value={selectedTheme}
                 onChange={handleThemeSelect}
               >
-                <option value="">Select Theme</option>
                 {prismThemes.map((theme) => (
-                  <option key={theme.value} value={theme.value}>
+                  <option className="focus:ring-[#538e8e] hover:bg-[#538e8e]" key={theme.value} value={theme.value}>
                     {theme.label}
                   </option>
                 ))}
               </select>
             </div>
-
+            <div onClick={()=>clearInputBox()} className="relative flex md:left-[420px] left-[250px] -mt-10 top-11 text-gray-500 hover:cursor-pointer hover:text-black">
+              <img className="h-6 w-6" src="broom.png"/>
+              Clear 
+              </div>
             <textarea
-              className="w-full h-48 sm:h-64 p-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+              className="w-full h-48 sm:h-96 p-4 pt-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#538e8e] resize-none"
               onChange={handleInput}
               placeholder="Type your code here..."
               value={code ? code : ""}
@@ -471,12 +476,12 @@ export default function Home() {
               ) : (
                 <button
                   onClick={() => downloadAsImage(codeRef)}
-                  className="px-4 py-2 sm:px-6 sm:py-3 bg-[#515048] flex gap-2 sm:gap-3 items-center justify-center text-white rounded-md hover:cursor-pointer hover:bg-[#63613d] focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto text-sm sm:text-base"
+                  className="px-4 py-2 sm:px-6 sm:py-3 bg-[#538e8e]   flex gap-2 sm:gap-3 items-center justify-center text-white rounded-md hover:cursor-pointer hover:bg-[#434040] focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto text-sm sm:text-base"
                 >
                   <div className="flex items-center space-x-2">
                     <img
                       className="h-4 w-4 sm:h-5 sm:w-5"
-                      src="/image.png"
+                      src="/download.png"
                       alt="Download Icon"
                     />
                     <p>Download as PNG</p>
@@ -490,11 +495,11 @@ export default function Home() {
               ) : (
                 <button
                   onClick={() => copyImageToClipboard(codeRef)}
-                  className="px-4 py-2 sm:px-6 sm:py-3 bg-[#68703f] flex gap-2 sm:gap-3 items-center justify-center text-white rounded-md hover:cursor-pointer hover:bg-[#959e62] focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto text-sm sm:text-base"
+                  className="px-4 py-2 sm:px-6 sm:py-3  bg-[#538e8e] flex gap-2 sm:gap-3 items-center justify-center text-white rounded-md hover:cursor-pointer hover:bg-[#434040] focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto text-sm sm:text-base"
                 >
                   <img
                     className="h-4 w-4 sm:h-5 sm:w-5"
-                    src="/copy-icon.png"
+                    src="/copy.png"
                     alt="Copy Icon"
                   />
                   Copy PNG to clipboard
