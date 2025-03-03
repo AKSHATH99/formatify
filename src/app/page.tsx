@@ -306,8 +306,6 @@ export default function Home() {
               // Create ClipboardItem and write to clipboard
               const item = new ClipboardItem({ "image/png": blob });
               await navigator.clipboard.write([item]);
-              // You might want to add some user feedback here
-              // alert('Image copied to clipboard!');
               setCodeCopied(true);
             } catch (err) {
               console.error("Failed to copy image: ", err);
@@ -355,13 +353,13 @@ export default function Home() {
     );
   };
 
-  const generatePrompt =(code:any)=>{
+  const generatePrompt =(code:string)=>{
     const promptText = `Explain how this code works. Please format your response in Markdown with proper headings, lists, and code blocks: ${code}`;
     console.log(promptText);
     return promptText;
   }
 
-  const AskAI=async(code:any)=>{
+  const AskAI=async(code:string)=>{
     console.log(code);
 
     const API_BASE_URL = process.env.NODE_ENV === 'production'
@@ -388,13 +386,11 @@ export default function Home() {
     const data = await res.json();
     setAIResponse(data.response)
     console.log(data.response);
-    
-    // setResponse(data.response);
+
   } catch (error) {
     console.error('Error:', error);
     setgeneratingAIResponse(false)
-    Errornotify()
-    // setResponse('Error occurred while fetching response.');
+
   } finally {
     setgeneratingAIResponse(false)
 

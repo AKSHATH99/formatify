@@ -11,7 +11,7 @@ const GeminiResponse = ({ responseText }) => {
   }
 
   return (
-    <div className="bg-white rounded-lg shadow p-14 max-h-[500px] overflow-auto">
+    <div className="bg-white rounded-lg shadow p-14  max-h-[500px] overflow-auto">
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         rehypePlugins={[rehypeRaw]}
