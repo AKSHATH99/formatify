@@ -379,11 +379,11 @@ export default function Home() {
       },
       body: JSON.stringify({ prompt }),
     });
-    
-    if (!res.ok) {
-      throw new Error('Failed to fetch from API');
-      setgeneratingAIResponse(false)
-    }
+    console.log(res)
+    // if (!res.ok) {
+    //   throw new Error('Failed to fetch from API');
+    //   setgeneratingAIResponse(false)
+    // }
     
     const data = await res.json();
     setAIResponse(data.response)
