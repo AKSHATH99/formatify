@@ -523,7 +523,7 @@ const clearInputBox=()=>{
               onClick={() => {
                 AskAI(code);
               }}
-              className="ml-5 mt-5 border rounded-lg p-1 px-6 justify-center items-center shadow-blue-400 shadow-2xl flex gap-4 bg-black text-white hover:shadow-blue-600 hover:shadow-2xl hover:bg-gray-800 transition-shadow hover:cursor-pointer duration-300"
+              className="ml-5 mt-5 border rounded-lg p-1 px-6 justify-center items-center shadow-blue-100 shadow-2xl flex gap-4 bg-white  hover:shadow-blue-600 hover:shadow-2xl hover:bg-gray-800 transition-shadow hover:cursor-pointer duration-300 hover:text-white"
             >
               <img className="h-10" src="gemini.svg" />
               {generatingAIResponse ? (
